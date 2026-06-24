@@ -1,26 +1,6 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:17-alpine
-    container_name: traffic-monitoring-db
-    environment:
-      POSTGRES_DB: traffic_monitoring
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - tms-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
   userservice:
     build:
       context: .
@@ -38,18 +18,18 @@ services:
       SPRING_JPA_PROPERTIES_HIBERNATE_USE_SQL_COMMENTS: "true"
     ports:
       - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - tms-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/users/greet"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   tms-network:
     driver: bridge
 
-volumes:
-  postgres_data:
-    driver: local
 

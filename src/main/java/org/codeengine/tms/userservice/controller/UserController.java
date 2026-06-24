@@ -161,5 +161,15 @@ public class UserController {
         boolean exists = userService.userExistsByEmail(email);
         return new ResponseEntity<>(exists, HttpStatus.OK);
     }
+
+    /**
+     * Greeting API
+     * GET /api/users/greet
+     */
+    @GetMapping("/greet")
+    public ResponseEntity<String> greetUser() {
+        String greetingMessage = "Hello! Welcome to the Traffic Monitoring System User Service.";
+        return new ResponseEntity<>(greetingMessage, HttpStatus.OK);
+    }
 }
 

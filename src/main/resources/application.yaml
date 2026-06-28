@@ -1,20 +1,50 @@
+server:
+  port: 8081
+
 spring:
   application:
-    name: userservice
-
+    name: USER-SERVICE
   datasource:
     url: jdbc:postgresql://etms.chubebdi6f7l.ap-south-1.rds.amazonaws.com:5432/etmsdb
     username: etms_user
     password: CHnMwmBYnZ6EGZSZEayO
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 5
+      idle-timeout: 500000
+      max-lifetime: 1200000
+      connection-timeout: 50000
+      auto-commit: true
+      connection-test-query: SELECT 1
+      pool-name: HikariPool-UserService
 
   jpa:
     hibernate:
       ddl-auto: update
+    open-in-view: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
         use_sql_comments: true
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    prefer-same-zone-eureka: true   # 👈 force local resolver
+  instance:
+    prefer-ip-address: true
+
+
+
 

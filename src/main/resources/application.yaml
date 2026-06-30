@@ -1,14 +1,16 @@
 server:
-  port: 8081
+  # Allow overriding the port via environment variable SERVER_PORT (defaults to 8081 to match docker-compose)
+  port: ${SERVER_PORT:8081}
 
 spring:
   application:
     name: USER-SERVICE
   datasource:
-    url: jdbc:postgresql://etms.chubebdi6f7l.ap-south-1.rds.amazonaws.com:5432/etmsdb
-    username: etms_user
-    password: CHnMwmBYnZ6EGZSZEayO
-    driver-class-name: org.postgresql.Driver
+    # Prefer environment variables for containerized deployments. Defaults keep existing values for local dev.
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://etms.chubebdi6f7l.ap-south-1.rds.amazonaws.com:5432/etmsdb}
+    username: ${SPRING_DATASOURCE_USERNAME:etms_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:CHnMwmBYnZ6EGZSZEayO}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
     hikari:
       maximum-pool-size: 50
       minimum-idle: 5
@@ -40,7 +42,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      # Allow overriding the Eureka server URL via environment variable EUREKA_SERVER_URL
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
     prefer-same-zone-eureka: true   # 👈 force local resolver
   instance:
     prefer-ip-address: true
